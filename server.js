@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('./db/connection');
 //const apiRoutes = require('./routes/apiRoutes');
+const inputCheck = require('./utils/inputCheck');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -23,6 +24,30 @@ app.get('/api/departments', (req, res) => {
         res.json({
             message: 'success',
             data: rows
+        });
+    });
+});
+
+// POST a department
+// assume object req.body will be used to populate the candidate's data
+app.post('/api/departments', ({ body }, res) => {
+    // data validatation first
+    const errors = inputCheck(body, 'name');
+    if (errors) {
+        res.status(400).json({ errors: errors });
+        return;
+    }
+
+    const sql = `INSERT INTO departments (name) VALUES (?)`;
+    const params = [body.name];
+
+    db.query(sql, params, (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+        }
+        res.json({
+            message: 'success',
+            data: body
         });
     });
 });
