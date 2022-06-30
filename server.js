@@ -1,6 +1,6 @@
 const express = require('express');
 const db = require('./db/connection');
-// const apiRoutes = require('./routes/apiRoutes');
+//const apiRoutes = require('./routes/apiRoutes');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -9,7 +9,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // API ROUTES (endpoints)
-// app.use('/api', apiRoutes);
+//app.use('/api', apiRoutes);
+
+// GET all department names and department ids
+app.get('/api/departments', (req, res) => {
+    const sql = `SELECT * FROM departments`;
+
+    db.query(sql, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: 'success',
+            data: rows
+        });
+    });
+});
 
 // TEST CONNECTION
 app.get('/', (req, res) => {
