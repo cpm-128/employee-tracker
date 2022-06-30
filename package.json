@@ -1,0 +1,22 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "<a href=\"#license\"><img src=\"https://img.shields.io/badge/license-mit-informational\"></img></a>",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cpm-128/employee-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cpm-128/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/cpm-128/employee-tracker#readme",
+  "devDependencies": {
+    "jest": "^28.1.2"
+  }
+}
