@@ -8,11 +8,11 @@ CREATE TABLE departments (
 
 -- roles table, department_id as FK
 CREATE TABLE roles (
-    id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
-    salary DECIMAL(10,2) NOT NULL,
-    department_id INTEGER
-    CONSTRAINT fk_party
+    id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    department_id INTEGER,
+    salary DECIMAL(10,2) NOT NULL
+    CONSTRAINT fk_department
         FOREIGN KEY (department_id)
         REFERENCES departments(id)
         -- must reference the primary key
