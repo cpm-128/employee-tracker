@@ -49,7 +49,7 @@ THEN I am prompted to select an employee to update and their new role and this i
 ## Installation
 - Clone the directly from the GitHub repository to your local machine.
 - Run _npm init_ in the command line.
-- Run the command _TBD_ to launch the application.
+- Run the command _node filenameTBD_ to launch the application.
 
 ## Usage
 To eaily see company and employee structure and make changes.
