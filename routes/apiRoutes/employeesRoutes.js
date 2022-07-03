@@ -19,25 +19,27 @@ router.get('/employees', (req, res) => {
     });
 });
 
-// POST a role
+// POST an employee
 // assume object req.body will be used to populate the role's data
-// router.post('/roles', ({ body }, res) => {
-//     // data validatation first
-//     const errors = inputCheck(body, 'title', 'department_id', 'salary');
-//     if (errors) {
-//         res.status(400).json({ errors: errors });
-//         return;
-//     }
+router.post('/employees', ({ body }, res) => {
+    // data validatation first
+    const errors = inputCheck(body, 'first_name', 'last_name', 'role_id', 'manager_id');
+    if (errors) {
+        res.status(400).json({ errors: errors });
+        return;
+    }
 
-//     const sql = `INSERT INTO roles (title, department_id, salary) VALUES (?,?,?)`;
-//     const params = [body.name];
+    const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`;
+    const params = [body.name];
 
-//     db.query(sql, params, (err, result) => {
-//         res.json({
-//             message: 'success',
-//             data: body
-//         });
-//     });
-// });
+    db.query(sql, params, (err, result) => {
+        res.json({
+            message: 'success',
+            data: body
+        });
+    });
+});
+
+// PUT an employee
 
 module.exports = router;
