@@ -4,6 +4,7 @@ const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
 
 // GET all employees with first_name, last_name, job title, department, salary, and manager
+//TODO: update to include role title instead of role_id, add department name, salary, and manager name
 router.get('/employees', (req, res) => {
     const sql = `SELECT * FROM employees`;
 
