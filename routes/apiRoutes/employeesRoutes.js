@@ -23,7 +23,7 @@ router.get('/employees', (req, res) => {
 // assume object req.body will be used to populate the role's data
 router.post('/employees', ({ body }, res) => {
     // data validatation first
-    const errors = inputCheck(body, 'first_name', 'last_name', 'role_id', 'manager_id');
+    const errors = inputCheck(body, 'first_name', 'last_name');
     if (errors) {
         res.status(400).json({ errors: errors });
         return;
@@ -40,6 +40,36 @@ router.post('/employees', ({ body }, res) => {
     });
 });
 
-// PUT an employee
+// PUT an employee's role
+    // req.params: who is being updated
+    // req.body: what is being updated
+router.put('/employees/:id', (req, res) => {
+    // data validatation first
+    const errors = inputCheck(req.body, 'role_id');
+    if (errors) {
+        res.status(400).json({ errors: errors });
+        return;
+    }
+
+    const sql = `UPDATE employees SET role_id = ? WHERE id = ?`;
+    const params = [req.body.role_id, req.params.id];
+
+    db.query(sql, params, (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            // check if a record was found
+        } else if (!result.affectedRows) {
+            res.json({
+                message: 'Employee not found.'
+            });
+        } else {
+            res.json({
+                message: 'success',
+                data: req.body,
+                changes: result.affectedRows
+            });
+        }
+    });
+});
 
 module.exports = router;
