@@ -1,3 +1,5 @@
+// =================
+// SERVER CODE START
 const express = require('express');
 const db = require('./db/connection');
 const apiRoutes = require('./routes/apiRoutes');
@@ -28,3 +30,5 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });
+// SERVER CODE END
+// ===============
