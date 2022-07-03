@@ -14,10 +14,6 @@ router.get('/roles', (req, res) => {
                     LEFT JOIN departments
                     ON roles.department_id = departments.id
                 `;
-    // `SELECT roles.*, departments.name AS department_id
-    //             FROM roles
-    //             LEFT JOIN departments
-    //             ON roles.department_id = departments.id`
 
     db.query(sql, (err, rows) => {
         if (err) {

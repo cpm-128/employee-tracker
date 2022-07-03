@@ -4,9 +4,22 @@ const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
 
 // GET all employees with first_name, last_name, job title, department, salary, and manager
-//TODO: update to include role title instead of role_id, add department name, salary, and manager name
+//TODO: display manager name instead of manager_id
 router.get('/employees', (req, res) => {
-    const sql = `SELECT * FROM employees`;
+    const sql = `SELECT
+                    employees.id AS id,
+                    employees.first_name AS first_name,
+                    employees.last_name AS last_name,
+                    roles.title AS title,
+                    departments.name AS department,
+                    roles.salary AS salary,
+                    employees.manager_id AS manager_id
+                FROM employees
+                    LEFT JOIN roles
+                        ON employees.role_id = roles.id
+                    LEFT JOIN departments
+                        ON roles.department_id = departments.id
+                `;
 
     db.query(sql, (err, rows) => {
         if (err) {
