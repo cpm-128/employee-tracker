@@ -314,6 +314,8 @@ function updateEmployeeRole() {
 };
 
 function quit() {
+    console.log('================')
     console.log(">>> GOODBYE. <<<");
+    console.log('================')
     db.end();
 };
