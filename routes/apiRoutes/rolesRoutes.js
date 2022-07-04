@@ -4,28 +4,28 @@ const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
 
 // GET all roles with job title, role id, department, and salary
-router.get('/roles', (req, res) => {
-    const sql = `SELECT
-                    roles.title AS title,
-                    roles.id AS id,
-                    departments.name AS department,
-                    roles.salary AS salary
-                FROM roles
-                    LEFT JOIN departments
-                    ON roles.department_id = departments.id
-                `;
+// router.get('/roles', (req, res) => {
+//     const sql = `SELECT
+//                     roles.title AS title,
+//                     roles.id AS id,
+//                     departments.name AS department,
+//                     roles.salary AS salary
+//                 FROM roles
+//                     LEFT JOIN departments
+//                     ON roles.department_id = departments.id
+//                 `;
 
-    db.query(sql, (err, rows) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        res.json({
-            message: 'success',
-            data: rows
-        });
-    });
-});
+//     db.query(sql, (err, rows) => {
+//         if (err) {
+//             res.status(500).json({ error: err.message });
+//             return;
+//         }
+//         res.json({
+//             message: 'success',
+//             data: rows
+//         });
+//     });
+// });
 
 // POST a role
 // assume object req.body will be used to populate the role's data

@@ -1,5 +1,6 @@
 // packages
 const inquirer = require('inquirer');
+const inputCheck = require('./utils/inputCheck');
 const db = require('./db/connection');
 
 // =============================
@@ -41,26 +42,31 @@ function mainMenu() {
 
                 // VIEW ALL DEPARTMENTS
                 case "View all departments":
+                    console.log(">>> You chose to view all departments <<<");
                     viewAllDepartments();
                 break;
 
                 // VIEW ALL ROLES
                 case "View all roles":
+                    console.log(">>> You chose to view all roles <<<");
                     viewAllRoles();
                 break;
 
                 // VIEW ALL EMPLOYEES
                 case "View all employees":
+                    console.log(">>> You chose to view all employees <<<");
                     viewAllEmployees();
                 break;
 
                 // ADD A DEPARTMENT
                 case "Add a department":
+                    console.log(">>> You chose to add a department <<<");
                     addDepartment();
                 break;
 
                 // ADD A ROLE
                 case "Add a role":
+                    console.log(">>> You chose to add a role >>>");
                     addRole();
                 break;
 
@@ -88,13 +94,15 @@ function mainMenu() {
 // ========================
 
 function viewAllDepartments() {
-    console.log(">>> You chose to view all departments <<<");
-
     // send the query to the db
-    const sql = `SELECT departments.id AS ID, departments.name AS Department FROM departments`;
+    const sql = `SELECT
+                    departments.id AS ID,
+                    departments.name AS Department
+                FROM departments
+                `;
     db.query(sql, (err, res) => {
         if (err) {
-            res.status(500).json({ error: err.message });
+            console.log('DATABASE ERROR');
             return;
         }
         console.table(res);
@@ -103,29 +111,85 @@ function viewAllDepartments() {
 };
 
 function viewAllRoles() {
-    console.log(">>> You choose to view all roles >>>");
+    // send the query to the db
+    const sql = `SELECT
+                    roles.title AS Title,
+                    roles.id AS Role_id,
+                    departments.name AS Department,
+                    roles.salary AS Salary
+                FROM roles
+                    LEFT JOIN departments
+                    ON roles.department_id = departments.id
+                `;
+    db.query(sql, (err, rows) => {
+        if (err) {
+            console.log('DATABASE ERROR');
+            return;
+        };
+        console.table(rows);
+        mainMenu();
+    })
 };
 
 function viewAllEmployees() {
-    console.log(">>> You choose to view all employees >>>");
+    // send the query to the db
+    //TODO: display manager name instead of manager_id
+    const sql = `SELECT
+                    employees.id AS employee_id,
+                    employees.first_name AS first_name,
+                    employees.last_name AS last_name,
+                    roles.title AS title,
+                    departments.name AS department,
+                    roles.salary AS salary,
+                    employees.manager_id AS manager_id
+                FROM employees
+                    LEFT JOIN roles
+                        ON employees.role_id = roles.id
+                    LEFT JOIN departments
+                        ON roles.department_id = departments.id
+                `;
+    db.query(sql, (err, rows) => {
+        if (err) {
+            console.log('DATABASE ERROR');
+            return;
+        };
+        console.table(rows);
+        mainMenu();
+    })
 };
 
 function addDepartment() {
-    console.log(">>> You choose to add a department >>>");
-
+    // prompt for the missing info
     inquirer.prompt([
         {
             name: "name",
             type: "input",
             message: "What department would you like to add?"
         }
-    ])
-    //TODO: add the function to insert this in the db
+    ]).then(function(answers) {
+        // data validation first
+        const errors = inputCheck(answers, 'name');
+        if (errors) {
+            console.log('Error: must enter a valid department name.')
+            return;
+        };
+        // send the query to the db
+        const sql = `INSERT INTO departments (name) VALUES (?)`;
+        const params = [answers.name];
+
+        db.query(sql, params, (err, result) => {
+            if (err) {
+                console.log('DATABASE ERROR');
+                return;
+            };
+            console.log('>>> The department has been added <<<')
+            viewAllDepartments();
+        });
+    });
 };
 
 function addRole() {
-    console.log(">>> You choose to add a role >>>");
-
+    // prompt for the missing info
     inquirer.prompt([
         {
             name: "title",
@@ -133,17 +197,37 @@ function addRole() {
             message: "What is the role title?"
         },
         {
-            name: "salary",
-            type: "number",
-            message: "What is the salary for this role?",
-        },
-        {
             name: "department_id",
             type: "number",
             message: "What is the department id for this role?"
+        },
+        {
+            name: "salary",
+            type: "number",
+            message: "What is the salary for this role?",
         }
-    ])
-    //TODO: add the function to insert this in the db
+    ]).then(function(answers) {
+        // data validation first
+        const errors = inputCheck(answers, 'title', 'department_id', 'salary');
+        if (errors) {
+            console.log('Error: must enter a valid title, department id, and salary.')
+            return;
+        };
+        // send the query to the db
+        const sql = `INSERT INTO roles (title, department_id, salary)
+                        VALUES (?,?,?)
+                    `;
+        const params = [answers.title, answers.department_id, answers.salary];
+
+        db.query(sql, params, (err, result) => {
+            if (err) {
+                console.log('DATABASE ERROR');
+                return;
+            };
+            console.log('>>> The role has been added <<<')
+            viewAllRoles();
+        });
+    });
 };
 
 function addEmployee() {
