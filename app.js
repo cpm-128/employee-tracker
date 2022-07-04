@@ -1,5 +1,21 @@
-// application to run from the command line
+// packages
 const inquirer = require('inquirer');
+const db = require('./db/connection');
+
+// =============================
+// CONNECT TO DATABASE
+// RUN THE MAIN MENU ON APP LOAD
+// =============================
+db.connect(function(err) {
+    if (err) throw err;
+
+    console.clear();
+    console.log('=================================')
+    console.log('Welcome to the Employee Database.')
+    console.log('=================================')
+
+    mainMenu();
+})
 
 // MAIN MENU
 function mainMenu() {
@@ -65,19 +81,25 @@ function mainMenu() {
             }
         })
     })
-}
-
-// ======================================
-// RUN THE MAIN MENU FUNCTION ON APP LOAD
-// ======================================
-mainMenu();
+};
 
 // ========================
 // FUNCTIONS FROM MAIN MENU
 // ========================
 
 function viewAllDepartments() {
-    console.log(">>> You choose to view all departments >>>");
+    console.log(">>> You chose to view all departments <<<");
+
+    // send the query to the db
+    const sql = `SELECT departments.id AS ID, departments.name AS Department FROM departments`;
+    db.query(sql, (err, res) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.table(res);
+        mainMenu();
+    });
 };
 
 function viewAllRoles() {
@@ -171,5 +193,6 @@ function updateEmployeeRole() {
 };
 
 function quit() {
-    console.log(">>> GOODBYE. >>>");
+    console.log(">>> GOODBYE. <<<");
+    db.end();
 };
