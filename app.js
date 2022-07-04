@@ -66,17 +66,19 @@ function mainMenu() {
 
                 // ADD A ROLE
                 case "Add a role":
-                    console.log(">>> You chose to add a role >>>");
+                    console.log(">>> You chose to add a role <<<");
                     addRole();
                 break;
 
                 // ADD AN EMPLOYEE
                 case "Add an employee":
+                    console.log(">>> You chose to add an employee <<<");
                     addEmployee();
                 break;
 
                 // UPDATE EMPLOYEE ROLE
                 case "Update an employee role":
+                    console.log(">>> You chose to update an employee's role <<<");
                     updateEmployeeRole();
                 break;
 
@@ -231,8 +233,7 @@ function addRole() {
 };
 
 function addEmployee() {
-    console.log(">>> You choose to add an employee >>>");
-
+    // get missing info
     inquirer.prompt([
         {
             name: "first_name",
@@ -254,13 +255,31 @@ function addEmployee() {
             type: "number",
             message: "What is the id of the manager the employee will be reporting to?"
         },
-    ])
-    //TODO: add the function to insert this in the db
+    ]).then(function(answers) {
+        // data validation first
+        const errors = inputCheck(answers, 'first_name', 'last_name', 'role_id', 'manager_id');
+        if (errors) {
+            console.log('Error: must enter a valid first name, last name, role id, and manager id')
+            return;
+        };
+        // send the query to the db
+        const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+                        VALUES (?,?,?,?)`;
+        const params = [answers.first_name, answers.last_name, answers.role_id, answers.manager_id];
+
+        db.query(sql, params, (err, result) => {
+            if (err) {
+                console.log('DATABASE ERROR');
+                return;
+            };
+            console.log('>>> The employee has been added <<<')
+            viewAllEmployees();
+        });
+    });
 };
 
 function updateEmployeeRole() {
-    console.log(">>> You choose to update an employee's role >>>");
-
+    // get missing info
     inquirer.prompt([
         {
             name: "employee_id",
@@ -272,8 +291,26 @@ function updateEmployeeRole() {
             type: "number",
             message: "What the the new role id?"
         }
-    ])
-     //TODO: add the function to insert this in the db
+    ]).then(function(answers) {
+        // data validation first
+        const errors = inputCheck(answers, 'employee_id', 'role_id');
+        if (errors) {
+            console.log('Error: must enter a valid employee id and role id.');
+            return;
+        };
+        // send the query to the db
+        const sql = `UPDATE employees SET role_id = ? WHERE id = ?`;
+        const params = [answers.role_id, answers.employee_id];
+
+        db.query(sql, params, (err, result) => {
+            if (err) {
+                console.log('DATABASE ERROR');
+                return;
+            };
+            console.log(">>> The employee's role has been updated <<<")
+            viewAllEmployees();
+        });
+    });
 };
 
 function quit() {

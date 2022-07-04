@@ -29,23 +29,23 @@ const inputCheck = require('../../utils/inputCheck');
 
 // POST a role
 // assume object req.body will be used to populate the role's data
-router.post('/roles', ({ body }, res) => {
-    // data validatation first
-    const errors = inputCheck(body, 'title', 'department_id', 'salary');
-    if (errors) {
-        res.status(400).json({ errors: errors });
-        return;
-    }
+// router.post('/roles', ({ body }, res) => {
+//     // data validatation first
+//     const errors = inputCheck(body, 'title', 'department_id', 'salary');
+//     if (errors) {
+//         res.status(400).json({ errors: errors });
+//         return;
+//     }
 
-    const sql = `INSERT INTO roles (title, department_id, salary) VALUES (?,?,?)`;
-    const params = [body.name];
+//     const sql = `INSERT INTO roles (title, department_id, salary) VALUES (?,?,?)`;
+//     const params = [body.name];
 
-    db.query(sql, params, (err, result) => {
-        res.json({
-            message: 'success',
-            data: body
-        });
-    });
-});
+//     db.query(sql, params, (err, result) => {
+//         res.json({
+//             message: 'success',
+//             data: body
+//         });
+//     });
+// });
 
 module.exports = router;
