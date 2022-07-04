@@ -95,6 +95,7 @@ function mainMenu() {
 // ========================
 // FUNCTIONS FROM MAIN MENU
 // ========================
+//TODO: move these help functions to their own file in a future iteraion
 
 function viewAllDepartments() {
     // send the query to the db
