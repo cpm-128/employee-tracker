@@ -135,7 +135,6 @@ function viewAllRoles() {
 
 function viewAllEmployees() {
     // send the query to the db
-    //TODO: display manager name instead of manager_id
     const sql = `SELECT
                     employees.id AS employee_id,
                     employees.first_name AS first_name,
@@ -143,12 +142,14 @@ function viewAllEmployees() {
                     roles.title AS title,
                     departments.name AS department,
                     roles.salary AS salary,
-                    employees.manager_id AS manager_id
+                    CONCAT(e.first_name,' ',e.last_name) AS manager
                 FROM employees
                     LEFT JOIN roles
                         ON employees.role_id = roles.id
                     LEFT JOIN departments
                         ON roles.department_id = departments.id
+                    LEFT JOIN employees e
+                        ON employees.manager_id = e.id
                 `;
     db.query(sql, (err, rows) => {
         if (err) {
