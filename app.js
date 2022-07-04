@@ -1,5 +1,6 @@
 // packages
 const inquirer = require('inquirer');
+const cTable = require('console.table');
 const inputCheck = require('./utils/inputCheck');
 const db = require('./db/connection');
 
