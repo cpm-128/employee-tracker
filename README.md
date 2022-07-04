@@ -63,10 +63,11 @@ Live url: n/a
 Repo url: https://github.com/cpm-128/employee-tracker
 
 ### Screencapture
-<img src="">
+<img src="./images/cli_1.png">
+<img src="./images/cli_2.png">
 
 ### Video Walkthrough
-<a href="">Watch here.</a>
+<a href="https://drive.google.com/file/d/11XcfbfJ1694hg6FKGiZGUbNXT_4iEfTG/view">Watch here.</a>
 
 ## Contributors
 n/a
